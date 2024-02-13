@@ -14,12 +14,13 @@ module.exports = (app) => {
   );
   router.post("/login", validate(userValidation.login), authController.login);
   router
-    .route("/:userId")
-    .get(
-      authMiddleware.user,
-      validate(userValidation.getUser),
-      userController.getUser
+  .route("/:userId")
+  .get(
+    authMiddleware.user,
+    validate(userValidation.getUser),
+    userController.getUser
     );
+    router.route("/refresh/token").get(authMiddleware.user,authController.refreshToken)
 
   app.use("/api/user", router);
 };

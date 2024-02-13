@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginRequest } from '../redux/actions/action';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isUserLogin = useSelector((state) => state.auth.user)
+  const isUserLogins = useSelector((state) => state)
+  console.log("isUserLogin~~~>>>",isUserLogins);
 
   const initialValues = {
     email: '',
@@ -21,6 +26,12 @@ const LoginForm = () => {
     dispatch(loginRequest(values));
     setSubmitting(false);
   };
+
+  useEffect(() => {
+    if(isUserLogin) {
+      navigate('/home')
+    }
+  }, [isUserLogin])
 
   return (
     <div style={styles.container}>

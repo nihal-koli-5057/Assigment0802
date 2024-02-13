@@ -1,6 +1,6 @@
 
 import { createReducer } from '@reduxjs/toolkit';
-import { loginSuccess, loginFailure } from '../../redux/actions/action';
+import { loginSuccess, loginFailure, LOGOUT_USER } from '../../redux/actions/action';
 
 const initialState = {
   user: null,
@@ -16,6 +16,10 @@ const authReducer = createReducer(initialState, (builder) => {
     .addCase(loginFailure, (state, action) => {
       state.user = null;
       state.error = action.payload;
+    })
+    .addCase(LOGOUT_USER, (state, action) => {
+      state.user = null;
+      state.error = null;
     });
 });
 

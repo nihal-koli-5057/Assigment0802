@@ -6,7 +6,8 @@ function* login(action) {
   try {
     const { email, password } = action.payload;
     const response = yield call(loginApi, { email, password });
-    yield put(loginSuccess(response.data));
+    yield put(loginSuccess(response));
+    console.log("response is here -----", response)
   } catch (error) {
     yield put(loginFailure(error.message));
   }

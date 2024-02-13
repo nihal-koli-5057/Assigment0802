@@ -3,13 +3,17 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { registerRequest } from '../redux/actions/action';
 import { useDispatch } from 'react-redux';
+import { Navigate, useNavigate } from "react-router-dom";
+
 
 const RegistrationForm = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate()
     const handleSubmit = (values, { setSubmitting }) => {
         console.log(values);
         setSubmitting(false);
         dispatch(registerRequest(values));
+        navigate('/login')
     };
 
     return (
@@ -22,18 +26,20 @@ const RegistrationForm = () => {
                     email: '',
                     phoneNumber: '',
                     dateOfBirth: '',
-                    gender: ''
+                    gender: '',
+                    password: ''
                 }}
                 validationSchema={Yup.object().shape({
                     firstName: Yup.string().required('First Name is required'),
                     lastName: Yup.string().required('Last Name is required'),
                     email: Yup.string().email('Invalid email').required('Email is required'),
-                    phoneNumber: Yup.string().matches(
-                        /^\+(?:[0-9] ?){6,14}[0-9]$/,
-                        'Invalid phone number'
-                    ).required('Phone Number is required'),
+                    // phoneNumber: Yup.string().matches(
+                    //     /^\+(?:[0-9] ?){6,14}[0-9]$/,
+                    //     'Invalid phone number'
+                    // ).required('Phone Number is required'),
                     dateOfBirth: Yup.date().required('Date of Birth is required').max(new Date(), 'Date of Birth must be in the past').min(new Date('1900-01-01'), 'You must be at least 18 years old'),
-                    gender: Yup.string().required('Gender is required')
+                    gender: Yup.string().required('Gender is required'),
+                    password: Yup.string().required('Password is required').min(6, 'Password must be at least 6 characters')
                 })}
                 onSubmit={handleSubmit}
             >
@@ -74,11 +80,17 @@ const RegistrationForm = () => {
                             <label htmlFor="gender" style={styles.label}>Gender</label>
                             <Field as="select" name="gender" className="form-control" style={styles.formControl}>
                                 <option value="">Select Gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Other</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
                             </Field>
                             <ErrorMessage name="gender" component="div" className="error-message" style={styles.errorMessage} />
+                        </div>
+
+                        <div style={styles.formGroup}>
+                            <label htmlFor="password" style={styles.label}>Password</label>
+                            <Field type="password" name="password" className="form-control" style={styles.formControl} />
+                            <ErrorMessage name="password" component="div" className="error-message" style={styles.errorMessage} />
                         </div>
 
                         <button type="submit" disabled={isSubmitting} className="btn btn-primary" style={styles.button}>

@@ -10,7 +10,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
       <Route
         {...rest}
         render={(props) =>
-          isAuthenticated !== null? (
+          isAuthenticated ? (
             <Component {...props} />
           ) : (
             <Navigate to={{ pathname: '/login', state: { from: props.location } }} />

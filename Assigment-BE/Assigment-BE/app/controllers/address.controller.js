@@ -9,14 +9,13 @@ const addAddress = catchAsync(async (req, res) => {
 });
 
 const getAddress = catchAsync(async (req, res) => {
-  const user = await userService.getUserById(req.params.userId);
+  const address = await addressService.getAddressById(req.params.addressId);
 
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  if (!address) {
+    throw new ApiError(httpStatus.NOT_FOUND, "address not found");
   }
 
-  delete user.password;
-  res.send({ user });
+  res.send({ address });
 });
 
 module.exports = {

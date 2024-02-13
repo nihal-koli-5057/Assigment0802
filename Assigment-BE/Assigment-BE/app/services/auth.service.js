@@ -1,8 +1,8 @@
-const userService = require("../services/user.service")
-const ApiError = require('../utils/ApiError');
-const httpStatus = require('http-status');
-const bycrypt = require('bcrypt');
-const { generateExpires,generateToken } = require("../utils/auth.js");
+const userService = require("../services/user.service");
+const ApiError = require("../utils/ApiError");
+const httpStatus = require("http-status");
+const bycrypt = require("bcrypt");
+const { generateExpires, generateToken } = require("../utils/auth.js");
 const db = require("../models");
 const User = db.user;
 
@@ -24,18 +24,45 @@ async function login(req) {
   }
 }
 
-async function generateAuthTokens(userId, email) {
+async function generateAuthTokens(id, email) {
+  const accessTokenExpires = generateExpires(1);
+  const accessToken = generateToken({ id, email }, accessTokenExpires);
 
-	const accessTokenExpires = generateExpires(6);
-	const accessToken = generateToken({ userId, email }, accessTokenExpires);
+  const refreshTokenExpires = generateExpires(24);
+  const refreshToken = generateToken({ id, email }, refreshTokenExpires);
 
-	return {
-		access: {
-			token: accessToken,
-			expires: accessTokenExpires,
-		},
-	};
+  return {
+    refresh: {
+      token: refreshToken,
+      expires: refreshTokenExpires,
+    },
+    access: {
+      token: accessToken,
+      expires: accessTokenExpires,
+    },
+  };
+}
+
+async function refreshToken(req, res) {
+  const access = {
+    token: "",
+    expires: "",
+  };
+  try {
+    const { id, email } = req.tokenUser;
+    const accessTokenExpires = generateExpires(1);
+    const accessToken = generateToken({ id, email }, accessTokenExpires);
+
+    access.token = accessToken;
+    access.expires = accessTokenExpires;
+  } catch (error) {
+    console.error(error, error.message);
+  }
+  return {
+    access,
+  };
 }
 module.exports = {
   login,
+  refreshToken,
 };

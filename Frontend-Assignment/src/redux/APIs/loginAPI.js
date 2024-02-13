@@ -7,7 +7,12 @@ export const loginApi = async ({ email, password }) => {
       email,
       password,
     });
-    return response.data;
+
+    const { token, user } = response?.data;
+
+    localStorage.setItem('token', token?.access?.token);
+
+    return user;
   } catch (error) {
     throw new Error(error.response.data.message || 'An error occurred during login');
   }

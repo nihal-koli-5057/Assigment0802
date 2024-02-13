@@ -16,7 +16,7 @@ async function addAddress(req) {
   return addAddress;
 }
 
-async function getUserById(id) {
+async function getAddressById(id) {
   try {
     const address = await Address.findOne({
       where: { id },
@@ -30,5 +30,5 @@ async function getUserById(id) {
 
 module.exports = {
   addAddress,
-  getUserById,
+  getAddressById,
 };

@@ -9,9 +9,9 @@ const user = async (req, res, next) => {
       // Validate token
       try {
         const tokenData = jwt.verify(token, process.env.jwtSecretKey);
-        if(tokenData.userId && tokenData.email){
-          const userData = await userService.validateUser(tokenData.userId,tokenData.email)
-          console.log('userData :>> ', userData);
+        console.log('tokenData :>> ', tokenData);
+        if(tokenData.id && tokenData.email){
+          const userData = await userService.validateUser(tokenData.id,tokenData.email)
           req.tokenUser = userData;
           next();
         }else{
